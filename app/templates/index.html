@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <div class="row justify-content-center text-center">
+            <div class="col-lg-8">
+                <h1 class="display-4 fw-bold mb-4">
+                    <i class="fas fa-rocket me-3"></i>Discover Your Spike Factor
+                </h1>
+                <p class="lead mb-5">
+                    Uncover your unique personality traits and unlock your potential with our comprehensive assessment tool.
+                </p>
+                <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                    <a href="{{ url_for('auth.register') }}" class="btn btn-spike btn-lg me-md-2">
+                        <i class="fas fa-user-plus me-2"></i>Get Started Free
+                    </a>
+                    <a href="{{ url_for('auth.login') }}" class="btn btn-outline-light btn-lg">
+                        <i class="fas fa-sign-in-alt me-2"></i>Sign In
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center mb-5">
+            <div class="col-lg-8 text-center">
+                <h2 class="display-5 fw-bold mb-3">Why Choose The Spike Factor?</h2>
+                <p class="lead text-muted">Our scientifically-backed assessment helps you understand your unique personality traits and provides actionable insights for personal and professional growth.</p>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card spike-factor-card h-100">
+                    <div class="card-body text-center p-4">
+                        <div class="mb-3">
+                            <i class="fas fa-brain fa-3x text-primary"></i>
+                        </div>
+                        <h5 class="card-title">Science-Based</h5>
+                        <p class="card-text">Our assessment is built on proven psychological principles and research to provide accurate insights into your personality.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card spike-factor-card h-100">
+                    <div class="card-body text-center p-4">
+                        <div class="mb-3">
+                            <i class="fas fa-clock fa-3x text-success"></i>
+                        </div>
+                        <h5 class="card-title">Quick & Easy</h5>
+                        <p class="card-text">Complete your assessment in just 10 minutes and get instant results with personalized recommendations.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card spike-factor-card h-100">
+                    <div class="card-body text-center p-4">
+                        <div class="mb-3">
+                            <i class="fas fa-chart-line fa-3x text-warning"></i>
+                        </div>
+                        <h5 class="card-title">Actionable Insights</h5>
+                        <p class="card-text">Get detailed reports with specific recommendations for personal and professional development.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row justify-content-center mb-5">
+            <div class="col-lg-8 text-center">
+                <h2 class="display-5 fw-bold mb-3">How It Works</h2>
+                <p class="lead text-muted">Simple steps to discover your spike factor</p>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-4 text-center">
+                <div class="mb-3">
+                    <div class="rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                        <span class="fs-2 fw-bold">1</span>
+                    </div>
+                </div>
+                <h5>Register Account</h5>
+                <p class="text-muted">Create your free account in seconds and access your personalized dashboard.</p>
+            </div>
+
+            <div class="col-md-4 text-center">
+                <div class="mb-3">
+                    <div class="rounded-circle bg-success text-white d-inline-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                        <span class="fs-2 fw-bold">2</span>
+                    </div>
+                </div>
+                <h5>Take Assessment</h5>
+                <p class="text-muted">Answer 10 carefully crafted questions about your personality and work style.</p>
+            </div>
+
+            <div class="col-md-4 text-center">
+                <div class="mb-3">
+                    <div class="rounded-circle bg-warning text-white d-inline-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                        <span class="fs-2 fw-bold">3</span>
+                    </div>
+                </div>
+                <h5>Get Results</h5>
+                <p class="text-muted">Receive your detailed report with insights and recommendations for growth.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center">
+                <h2 class="display-5 fw-bold mb-3">Ready to Discover Your Spike Factor?</h2>
+                <p class="lead text-muted mb-4">Join thousands of professionals who have unlocked their potential with our assessment.</p>
+                <a href="{{ url_for('auth.register') }}" class="btn btn-spike btn-lg">
+                    <i class="fas fa-rocket me-2"></i>Start Your Assessment
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h1 class="display-6 fw-bold">
+                        <i class="fas fa-file-alt me-3"></i>My Reports
+                    </h1>
+                    <p class="lead text-muted">View and manage your assessment reports</p>
+                </div>
+                <a href="{{ url_for('dashboard.index') }}" class="btn btn-outline-primary">
+                    <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card spike-factor-card">
+                <div class="card-body">
+                    {% if reports %}
+                        <div class="row g-4">
+                            {% for report in reports %}
+                            <div class="col-md-6 col-lg-4">
+                                <div class="card h-100 border">
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-center mb-3">
+                                            <i class="fas fa-chart-line fa-2x text-primary me-3"></i>
+                                            <div>
+                                                <h6 class="card-title mb-0">
+                                                    {{ report.assessment.type|title }} Assessment
+                                                </h6>
+                                                <small class="text-muted">
+                                                    {{ report.generated_at.strftime('%B %d, %Y') }}
+                                                </small>
+                                            </div>
+                                        </div>
+
+                                        <p class="card-text">
+                                            Your personalized spike factor assessment results and recommendations.
+                                        </p>
+
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span class="badge bg-success">
+                                                <i class="fas fa-check me-1"></i>Complete
+                                            </span>
+                                            <a href="{{ url_for('reports.view', report_id=report.id) }}"
+                                               class="btn btn-outline-primary btn-sm">
+                                                <i class="fas fa-eye me-1"></i>View Report
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="fas fa-file-alt fa-4x text-muted mb-3"></i>
+                            <h4>No Reports Available</h4>
+                            <p class="text-muted mb-4">Complete an assessment to generate your first report.</p>
+                            <a href="{{ url_for('assessment.simple') }}" class="btn btn-spike">
+                                <i class="fas fa-rocket me-2"></i>Take Assessment
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

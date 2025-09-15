@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <!-- Progress Bar -->
+            <div class="mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="text-muted">Question {{ question_num }} of {{ total_questions }}</span>
+                    <span class="text-muted">{{ ((question_num / total_questions) * 100)|round|int }}% Complete</span>
+                </div>
+                <div class="progress progress-spike">
+                    <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated"
+                         style="width: {{ ((question_num / total_questions) * 100)|round|int }}%"></div>
+                </div>
+            </div>
+
+            <div class="card spike-factor-card">
+                <div class="card-body p-5">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-question-circle fa-3x text-primary mb-3"></i>
+                        <h2 class="card-title">Assessment Question</h2>
+                    </div>
+
+                    <form method="POST">
+                        <div class="mb-4">
+                            <h4 class="text-center mb-4">{{ question.question }}</h4>
+
+                            <div class="row g-2">
+                                <div class="col-12">
+                                    <input type="radio" class="btn-check" name="answer" value="Strongly Disagree" id="option1" required>
+                                    <label class="btn btn-outline-danger w-100 p-3" for="option1">
+                                        <i class="fas fa-times-circle me-2"></i>Strongly Disagree
+                                    </label>
+                                </div>
+                                <div class="col-12">
+                                    <input type="radio" class="btn-check" name="answer" value="Disagree" id="option2" required>
+                                    <label class="btn btn-outline-warning w-100 p-3" for="option2">
+                                        <i class="fas fa-minus-circle me-2"></i>Disagree
+                                    </label>
+                                </div>
+                                <div class="col-12">
+                                    <input type="radio" class="btn-check" name="answer" value="Neutral" id="option3" required>
+                                    <label class="btn btn-outline-secondary w-100 p-3" for="option3">
+                                        <i class="fas fa-circle me-2"></i>Neutral
+                                    </label>
+                                </div>
+                                <div class="col-12">
+                                    <input type="radio" class="btn-check" name="answer" value="Agree" id="option4" required>
+                                    <label class="btn btn-outline-info w-100 p-3" for="option4">
+                                        <i class="fas fa-plus-circle me-2"></i>Agree
+                                    </label>
+                                </div>
+                                <div class="col-12">
+                                    <input type="radio" class="btn-check" name="answer" value="Strongly Agree" id="option5" required>
+                                    <label class="btn btn-outline-success w-100 p-3" for="option5">
+                                        <i class="fas fa-check-circle me-2"></i>Strongly Agree
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            {% if question_num > 1 %}
+                                <a href="{{ url_for('assessment.question', question_id=question_num-1) }}"
+                                   class="btn btn-outline-secondary">
+                                    <i class="fas fa-arrow-left me-2"></i>Previous
+                                </a>
+                            {% else %}
+                                <div></div>
+                            {% endif %}
+
+                            <button type="submit" class="btn btn-spike">
+                                {% if question_num == total_questions %}
+                                    <i class="fas fa-flag-checkered me-2"></i>Complete Assessment
+                                {% else %}
+                                    <i class="fas fa-arrow-right me-2"></i>Next Question
+                                {% endif %}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Question Navigation -->
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="d-flex justify-content-center flex-wrap gap-1">
+                        {% for i in range(1, total_questions + 1) %}
+                            {% if i == question_num %}
+                                <span class="badge bg-primary fs-6 px-3 py-2">{{ i }}</span>
+                            {% elif i < question_num %}
+                                <span class="badge bg-success fs-6 px-3 py-2">{{ i }}</span>
+                            {% else %}
+                                <span class="badge bg-light text-dark fs-6 px-3 py-2">{{ i }}</span>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
