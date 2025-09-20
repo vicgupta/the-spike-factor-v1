@@ -49,6 +49,7 @@ class Assessment(db.Model):
     completed = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     completed_at = db.Column(db.DateTime)
+    payment_id = db.Column(db.Integer, db.ForeignKey('payment.id'), nullable=True)
 
     # Relationships
     responses = db.relationship('Response', backref='assessment', lazy='dynamic', cascade='all, delete-orphan')
@@ -75,6 +76,24 @@ class Report(db.Model):
 
     def __repr__(self):
         return f'<Report {self.id}>'
+
+class Payment(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    stripe_payment_intent_id = db.Column(db.String(255), unique=True, nullable=False)
+    amount = db.Column(db.Integer, nullable=False)  # Amount in cents
+    currency = db.Column(db.String(3), nullable=False, default='usd')
+    status = db.Column(db.String(50), nullable=False, default='pending')  # pending, succeeded, failed, canceled
+    assessment_type = db.Column(db.String(50), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    # Relationships
+    user = db.relationship('User', backref='payments')
+    assessments = db.relationship('Assessment', backref='payment')
+
+    def __repr__(self):
+        return f'<Payment {self.id} - {self.stripe_payment_intent_id}>'
 
 @login.user_loader
 def load_user(id):

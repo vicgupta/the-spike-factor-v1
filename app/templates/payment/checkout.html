@@ -1,0 +1,175 @@
+{% extends "base.html" %}
+
+{% block title %}Premium Assessment - Checkout{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Premium Psychometric Assessment</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h4>What You Get:</h4>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">
+                                    <i class="fas fa-check text-success"></i>
+                                    <strong>84 Comprehensive Questions</strong><br>
+                                    <small class="text-muted">Covering 10 psychological dimensions</small>
+                                </li>
+                                <li class="list-group-item">
+                                    <i class="fas fa-check text-success"></i>
+                                    <strong>Big Five Personality Traits</strong><br>
+                                    <small class="text-muted">Openness, Conscientiousness, Extraversion, Agreeableness, Emotional Stability</small>
+                                </li>
+                                <li class="list-group-item">
+                                    <i class="fas fa-check text-success"></i>
+                                    <strong>Professional Skills Assessment</strong><br>
+                                    <small class="text-muted">Emotional Intelligence, Leadership, Decision Making, Innovation</small>
+                                </li>
+                                <li class="list-group-item">
+                                    <i class="fas fa-check text-success"></i>
+                                    <strong>Detailed Category Breakdown</strong><br>
+                                    <small class="text-muted">Scores and insights for each dimension</small>
+                                </li>
+                                <li class="list-group-item">
+                                    <i class="fas fa-check text-success"></i>
+                                    <strong>Personalized Recommendations</strong><br>
+                                    <small class="text-muted">Actionable development suggestions</small>
+                                </li>
+                                <li class="list-group-item">
+                                    <i class="fas fa-check text-success"></i>
+                                    <strong>Comprehensive Report</strong><br>
+                                    <small class="text-muted">Professional-grade analysis and insights</small>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="pricing-card">
+                                <div class="text-center mb-4">
+                                    <h2 class="display-4 text-primary">$10.00</h2>
+                                    <p class="text-muted">One-time payment</p>
+                                </div>
+
+                                <div id="payment-form">
+                                    <div id="card-element" class="form-control mb-3" style="padding: 10px;">
+                                        <!-- Stripe Elements will create form elements here -->
+                                    </div>
+                                    <div id="card-errors" role="alert" class="text-danger mb-3"></div>
+                                    <button id="submit-payment" class="btn btn-primary btn-lg w-100">
+                                        <span id="button-text">Pay $10.00</span>
+                                        <div id="spinner" class="spinner-border spinner-border-sm ms-2" role="status" style="display: none;">
+                                            <span class="visually-hidden">Loading...</span>
+                                        </div>
+                                    </button>
+                                </div>
+
+                                <div class="mt-3 text-center">
+                                    <small class="text-muted">
+                                        <i class="fas fa-lock"></i>
+                                        Secure payment powered by Stripe
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mt-4">
+                <div class="card-body">
+                    <h5>Why Choose Our Premium Assessment?</h5>
+                    <p>Our comprehensive psychometric assessment goes far beyond simple personality tests. Based on established psychological research and validated assessment frameworks, this tool provides:</p>
+                    <ul>
+                        <li><strong>Scientific Rigor:</strong> Questions based on validated psychological instruments</li>
+                        <li><strong>Professional Insights:</strong> Analysis comparable to corporate assessment tools</li>
+                        <li><strong>Actionable Results:</strong> Specific recommendations for personal and professional development</li>
+                        <li><strong>Comprehensive Coverage:</strong> Multiple dimensions of personality and professional skills</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const stripe = Stripe('{{ stripe_public_key }}');
+    const elements = stripe.elements();
+
+    const cardElement = elements.create('card', {
+        style: {
+            base: {
+                fontSize: '16px',
+                color: '#424770',
+                '::placeholder': {
+                    color: '#aab7c4',
+                },
+            },
+        },
+    });
+
+    cardElement.mount('#card-element');
+
+    const cardErrors = document.getElementById('card-errors');
+    cardElement.on('change', function(event) {
+        if (event.error) {
+            cardErrors.textContent = event.error.message;
+        } else {
+            cardErrors.textContent = '';
+        }
+    });
+
+    const form = document.getElementById('payment-form');
+    const submitButton = document.getElementById('submit-payment');
+    const buttonText = document.getElementById('button-text');
+    const spinner = document.getElementById('spinner');
+
+    submitButton.addEventListener('click', async function(event) {
+        event.preventDefault();
+
+        submitButton.disabled = true;
+        buttonText.style.display = 'none';
+        spinner.style.display = 'inline-block';
+
+        try {
+            // Create payment intent
+            const response = await fetch('/payment/create-payment-intent', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            const { client_secret, payment_id } = await response.json();
+
+            // Confirm payment
+            const { error } = await stripe.confirmCardPayment(client_secret, {
+                payment_method: {
+                    card: cardElement,
+                }
+            });
+
+            if (error) {
+                cardErrors.textContent = error.message;
+                submitButton.disabled = false;
+                buttonText.style.display = 'inline';
+                spinner.style.display = 'none';
+            } else {
+                // Payment succeeded, redirect to success page
+                window.location.href = '/payment/payment-success?payment_intent=' + client_secret.split('_secret_')[0];
+            }
+        } catch (error) {
+            cardErrors.textContent = 'An error occurred. Please try again.';
+            submitButton.disabled = false;
+            buttonText.style.display = 'inline';
+            spinner.style.display = 'none';
+        }
+    });
+});
+</script>
+{% endblock %}

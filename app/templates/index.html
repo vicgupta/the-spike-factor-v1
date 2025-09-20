@@ -119,15 +119,83 @@
     </div>
 </section>
 
-<!-- CTA Section -->
+<!-- Pricing Section -->
 <section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center mb-5">
+            <div class="col-lg-8 text-center">
+                <h2 class="display-5 fw-bold mb-3">Choose Your Assessment</h2>
+                <p class="lead text-muted">Select the assessment level that best fits your needs</p>
+            </div>
+        </div>
+
+        <div class="row justify-content-center g-4">
+            <!-- Free Assessment -->
+            <div class="col-md-5">
+                <div class="card spike-factor-card h-100">
+                    <div class="card-body p-4">
+                        <div class="text-center">
+                            <h4 class="card-title">Quick Assessment</h4>
+                            <div class="display-4 fw-bold text-primary mb-3">Free</div>
+                        </div>
+                        <ul class="list-unstyled">
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>10 targeted questions</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Basic personality insights</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Spike Factor score</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>General recommendations</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>5-minute completion</li>
+                        </ul>
+                        <div class="d-grid mt-4">
+                            <a href="{{ url_for('auth.register') }}" class="btn btn-outline-primary btn-lg">
+                                <i class="fas fa-play me-2"></i>Start Free Assessment
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Premium Assessment -->
+            <div class="col-md-5">
+                <div class="card spike-factor-card h-100 border-primary">
+                    <div class="card-header bg-primary text-white text-center">
+                        <h5 class="mb-0"><i class="fas fa-crown me-2"></i>Most Popular</h5>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="text-center">
+                            <h4 class="card-title">Premium Assessment</h4>
+                            <div class="display-4 fw-bold text-primary mb-3">$10</div>
+                            <p class="text-muted">One-time payment</p>
+                        </div>
+                        <ul class="list-unstyled">
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>84 comprehensive questions</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Big Five personality traits</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Emotional intelligence analysis</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Leadership & resilience assessment</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Detailed category breakdown</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Personalized recommendations</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Professional-grade report</li>
+                        </ul>
+                        <div class="d-grid mt-4">
+                            <a href="{{ url_for('auth.register') }}" class="btn btn-spike btn-lg">
+                                <i class="fas fa-crown me-2"></i>Get Premium Assessment
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-5 bg-light">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-8 text-center">
                 <h2 class="display-5 fw-bold mb-3">Ready to Discover Your Spike Factor?</h2>
                 <p class="lead text-muted mb-4">Join thousands of professionals who have unlocked their potential with our assessment.</p>
                 <a href="{{ url_for('auth.register') }}" class="btn btn-spike btn-lg">
-                    <i class="fas fa-rocket me-2"></i>Start Your Assessment
+                    <i class="fas fa-rocket me-2"></i>Start Your Journey
                 </a>
             </div>
         </div>

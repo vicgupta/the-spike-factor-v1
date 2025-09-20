@@ -11,9 +11,14 @@
                     </h1>
                     <p class="lead text-muted">Welcome back, {{ current_user.email }}!</p>
                 </div>
-                <a href="{{ url_for('assessment.simple') }}" class="btn btn-spike">
-                    <i class="fas fa-play me-2"></i>Take Assessment
-                </a>
+                <div class="btn-group">
+                    <a href="{{ url_for('assessment.simple') }}" class="btn btn-outline-primary">
+                        <i class="fas fa-play me-2"></i>Quick Assessment
+                    </a>
+                    <a href="{{ url_for('payment.checkout_premium') }}" class="btn btn-spike">
+                        <i class="fas fa-crown me-2"></i>Premium Assessment - $10
+                    </a>
+                </div>
             </div>
         </div>
     </div>
@@ -111,10 +116,17 @@
                                                     </a>
                                                 {% endif %}
                                             {% else %}
-                                                <a href="{{ url_for('assessment.simple') }}"
-                                                   class="btn btn-sm btn-outline-success">
-                                                    <i class="fas fa-play me-1"></i>Continue
-                                                </a>
+                                                {% if assessment.type == 'premium' %}
+                                                    <a href="{{ url_for('assessment.premium') }}"
+                                                       class="btn btn-sm btn-outline-success">
+                                                        <i class="fas fa-play me-1"></i>Continue
+                                                    </a>
+                                                {% else %}
+                                                    <a href="{{ url_for('assessment.simple') }}"
+                                                       class="btn btn-sm btn-outline-success">
+                                                        <i class="fas fa-play me-1"></i>Continue
+                                                    </a>
+                                                {% endif %}
                                             {% endif %}
                                         </td>
                                     </tr>

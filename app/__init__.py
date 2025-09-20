@@ -33,6 +33,9 @@ def create_app(config_class=Config):
     from app.reports import bp as reports_bp
     app.register_blueprint(reports_bp, url_prefix='/reports')
 
+    from app.payment import bp as payment_bp
+    app.register_blueprint(payment_bp, url_prefix='/payment')
+
     from app import models
     from app.routes import register_routes
     register_routes(app)
