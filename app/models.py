@@ -1,7 +1,8 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
+import secrets
 from app import db, login
 
 class User(UserMixin, db.Model):
@@ -10,6 +11,8 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(128))
     verified = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    reset_token = db.Column(db.String(100), unique=True)
+    reset_token_expiry = db.Column(db.DateTime)
 
     # Relationships
     assessments = db.relationship('Assessment', backref='user', lazy='dynamic')
@@ -19,6 +22,22 @@ class User(UserMixin, db.Model):
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+
+    def generate_reset_token(self):
+        self.reset_token = secrets.token_urlsafe(32)
+        self.reset_token_expiry = datetime.utcnow() + timedelta(hours=1)
+        return self.reset_token
+
+    def verify_reset_token(self, token):
+        if (self.reset_token == token and
+            self.reset_token_expiry and
+            datetime.utcnow() < self.reset_token_expiry):
+            return True
+        return False
+
+    def clear_reset_token(self):
+        self.reset_token = None
+        self.reset_token_expiry = None
 
     def __repr__(self):
         return f'<User {self.email}>'
