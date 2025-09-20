@@ -12,3 +12,4 @@ SQLAlchemy==2.0.21
 pytest==7.4.2
 pytest-flask==1.2.0
 stripe==8.8.0
+gunicorn==21.2.0

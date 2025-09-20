@@ -16,8 +16,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `flask db downgrade` - Rollback migrations
 
 ### Running the Application
+
+#### Development
 - `python app.py` - Start development server on http://127.0.0.1:5000
 - `flask run` - Alternative way to start the server
+
+#### Production
+- `gunicorn wsgi:app` - Start production server with Gunicorn
+- `gunicorn -w 4 -b 0.0.0.0:8000 wsgi:app` - Start with 4 workers on port 8000
+- `gunicorn --bind 127.0.0.1:5000 --workers 3 wsgi:app` - Local production setup
 
 ### Testing
 - `pytest` - Run all tests (when test files are created)

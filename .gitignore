@@ -86,3 +86,6 @@ dmypy.json
 .idea/
 *.sublime-workspace
 *.sublime-project
+
+cert.pem
+key.pem
