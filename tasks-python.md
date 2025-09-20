@@ -94,7 +94,7 @@
 - **Database**: SQLite with SQLAlchemy ORM
 - **Frontend**: Bootstrap 5 with Jinja2 templates
 - **Authentication**: Flask-Login with Flask-WTF
-- **Email**: Flask-Mail
+- **Email**: Flask-Mail (or Resend)
 - **Migrations**: Flask-Migrate
 - **Testing**: pytest
 - **Deployment**: Heroku/Railway/DigitalOcean
