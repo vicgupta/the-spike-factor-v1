@@ -309,13 +309,25 @@ def premium_question(question_id):
                                  question_num=question_id,
                                  total_questions=len(PREMIUM_ASSESSMENT_QUESTIONS))
 
-        # Save response
-        response = Response(
+        # Check if response already exists for this question (premium user might be revisiting)
+        existing_response = Response.query.filter_by(
             assessment_id=assessment.id,
-            question_id=question_id,
-            answer=answer
-        )
-        db.session.add(response)
+            question_id=question_id
+        ).first()
+
+        if existing_response:
+            # Update existing response for premium users (allow response modification)
+            existing_response.answer = answer
+            existing_response.created_at = datetime.utcnow()
+        else:
+            # Save new response
+            response = Response(
+                assessment_id=assessment.id,
+                question_id=question_id,
+                answer=answer
+            )
+            db.session.add(response)
+
         db.session.commit()
 
         # Check if this was the last question

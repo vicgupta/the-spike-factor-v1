@@ -10,6 +10,7 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(120), index=True, unique=True, nullable=False)
     password_hash = db.Column(db.String(128))
     verified = db.Column(db.Boolean, default=False)
+    is_premium = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     reset_token = db.Column(db.String(100), unique=True)
     reset_token_expiry = db.Column(db.DateTime)
@@ -52,6 +53,12 @@ class User(UserMixin, db.Model):
             assessment_type='premium',
             status='succeeded'
         ).first()
+
+        # Update is_premium flag if payment exists but flag is False
+        if successful_payment and not self.is_premium:
+            self.is_premium = True
+            db.session.commit()
+
         return successful_payment is not None
 
     def __repr__(self):
