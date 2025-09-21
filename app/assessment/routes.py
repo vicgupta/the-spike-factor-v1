@@ -212,15 +212,16 @@ def complete(assessment_id):
 def premium():
     """Start or continue premium assessment"""
     # Check if user has paid for premium assessment
+    if not current_user.has_premium_access():
+        flash('You need to purchase the premium assessment first.')
+        return redirect(url_for('payment.checkout_premium'))
+
+    # Get any successful payment for linking to assessment
     payment = Payment.query.filter_by(
         user_id=current_user.id,
         assessment_type='premium',
         status='succeeded'
     ).first()
-
-    if not payment:
-        flash('You need to purchase the premium assessment first.')
-        return redirect(url_for('payment.checkout_premium'))
 
     # Check if user has already completed premium assessment
     completed_assessment = Assessment.query.filter_by(
@@ -275,15 +276,16 @@ def premium_question(question_id):
         return redirect(url_for('assessment.premium'))
 
     # Verify user has access to premium assessment
+    if not current_user.has_premium_access():
+        flash('You need to purchase the premium assessment first.')
+        return redirect(url_for('payment.checkout_premium'))
+
+    # Get any successful payment for linking to assessment
     payment = Payment.query.filter_by(
         user_id=current_user.id,
         assessment_type='premium',
         status='succeeded'
     ).first()
-
-    if not payment:
-        flash('You need to purchase the premium assessment first.')
-        return redirect(url_for('payment.checkout_premium'))
 
     # Get current assessment
     assessment = Assessment.query.filter_by(

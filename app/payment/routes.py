@@ -17,32 +17,24 @@ def checkout_premium():
     """Display checkout page for premium assessment"""
     logger.info(f"User {current_user.id} accessing premium checkout page")
 
-    # Check if user already has a pending or completed premium assessment
-    existing_payment = Payment.query.filter_by(
-        user_id=current_user.id,
-        assessment_type='premium'
-    ).filter(Payment.status.in_(['succeeded', 'pending'])).first()
+    # Check if user already has access to premium assessment
+    if current_user.has_premium_access():
+        logger.info(f"User {current_user.id} already has premium access")
+        # User already paid, check for existing assessment or redirect to premium assessment
+        flash('You already have access to the premium assessment.')
+        return redirect(url_for('assessment.premium'))
 
-    if existing_payment:
-        logger.info(f"Found existing payment for user {current_user.id}: {existing_payment.id} (status: {existing_payment.status})")
-        if existing_payment.status == 'succeeded':
-            # User already paid, redirect to assessment
-            assessment = Assessment.query.filter_by(
-                user_id=current_user.id,
-                type='premium',
-                payment_id=existing_payment.id
-            ).first()
-            if assessment and not assessment.completed:
-                logger.info(f"Redirecting user {current_user.id} to continue premium assessment {assessment.id}")
-                return redirect(url_for('assessment.premium_question', question_id=1))
-            elif assessment and assessment.completed:
-                logger.info(f"User {current_user.id} already completed premium assessment {assessment.id}")
-                flash('You have already completed the premium assessment.')
-                return redirect(url_for('dashboard.index'))
-        elif existing_payment.status == 'pending':
-            logger.warning(f"User {current_user.id} has pending payment {existing_payment.id}")
-            flash('You have a pending payment. Please complete it or contact support.')
-            return redirect(url_for('dashboard.index'))
+    # Check for pending payments
+    pending_payment = Payment.query.filter_by(
+        user_id=current_user.id,
+        assessment_type='premium',
+        status='pending'
+    ).first()
+
+    if pending_payment:
+        logger.warning(f"User {current_user.id} has pending payment {pending_payment.id}")
+        flash('You have a pending payment. Please complete it or contact support.')
+        return redirect(url_for('dashboard.index'))
 
     logger.info(f"Showing checkout page to user {current_user.id}")
     return render_template('payment/checkout.html',

@@ -45,6 +45,15 @@ class User(UserMixin, db.Model):
         self.reset_token = None
         self.reset_token_expiry = None
 
+    def has_premium_access(self):
+        """Check if user has access to premium assessment based on any successful payment"""
+        successful_payment = Payment.query.filter_by(
+            user_id=self.id,
+            assessment_type='premium',
+            status='succeeded'
+        ).first()
+        return successful_payment is not None
+
     def __repr__(self):
         return f'<User {self.email}>'
 
