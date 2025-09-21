@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1><i class="fas fa-clipboard-list me-2"></i>Assessment Details</h1>
+                <a href="{{ url_for('admin.assessments') }}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left me-2"></i>Back to Assessments
+                </a>
+            </div>
+
+            <!-- Assessment Information -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Assessment Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>ID:</strong> {{ assessment.id }}</p>
+                            <p><strong>User:</strong>
+                                <a href="{{ url_for('admin.user_detail', user_id=assessment.user_id) }}">
+                                    {{ assessment.user.email }}
+                                </a>
+                            </p>
+                            <p><strong>Type:</strong>
+                                <span class="badge bg-{{ 'primary' if assessment.type == 'premium' else 'secondary' }}">
+                                    {{ assessment.type.title() }}
+                                </span>
+                            </p>
+                            <p><strong>Status:</strong>
+                                <span class="badge bg-{{ 'success' if assessment.completed else 'warning' }}">
+                                    {{ 'Completed' if assessment.completed else 'In Progress' }}
+                                </span>
+                            </p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Created:</strong> {{ assessment.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+                            <p><strong>Completed:</strong>
+                                {% if assessment.completed_at %}
+                                    {{ assessment.completed_at.strftime('%Y-%m-%d %H:%M:%S') }}
+                                {% else %}
+                                    <span class="text-muted">Not completed</span>
+                                {% endif %}
+                            </p>
+                            <p><strong>Payment:</strong>
+                                {% if assessment.payment %}
+                                    <span class="badge bg-success">Paid ({{ assessment.payment.status }})</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">Free</span>
+                                {% endif %}
+                            </p>
+                            <p><strong>Total Responses:</strong> {{ responses|length }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Responses -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Responses ({{ responses|length }})</h5>
+                </div>
+                <div class="card-body">
+                    {% if responses %}
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Question ID</th>
+                                    <th>Answer</th>
+                                    <th>Submitted</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for response in responses %}
+                                <tr>
+                                    <td>{{ response.question_id }}</td>
+                                    <td>{{ response.answer }}</td>
+                                    <td>{{ response.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <p class="text-muted">No responses found for this assessment.</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Reports -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Generated Reports ({{ reports|length }})</h5>
+                </div>
+                <div class="card-body">
+                    {% if reports %}
+                    {% for report in reports %}
+                    <div class="card mb-3">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h6 class="mb-0">Report #{{ report.id }}</h6>
+                            <small class="text-muted">Generated: {{ report.generated_at.strftime('%Y-%m-%d %H:%M:%S') }}</small>
+                        </div>
+                        <div class="card-body">
+                            <div class="content" style="max-height: 400px; overflow-y: auto;">
+                                {{ report.content | safe }}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    {% else %}
+                    <p class="text-muted">No reports generated for this assessment yet.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

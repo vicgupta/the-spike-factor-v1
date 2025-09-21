@@ -1,0 +1,245 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1><i class="fas fa-tachometer-alt me-2"></i>Admin Dashboard</h1>
+                <span class="badge bg-primary">Admin Access</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h5 class="card-title">Total Users</h5>
+                            <h2>{{ total_users }}</h2>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-users fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h5 class="card-title">Total Revenue</h5>
+                            <h2>${{ "%.2f"|format(total_revenue) }}</h2>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-dollar-sign fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h5 class="card-title">Total Assessments</h5>
+                            <h2>{{ total_assessments }}</h2>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-clipboard-list fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h5 class="card-title">Successful Payments</h5>
+                            <h2>{{ successful_payments }}</h2>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-credit-card fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Additional Statistics -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-chart-pie me-2"></i>Assessment Types</h5>
+                    <p class="mb-1">Simple: <span class="badge bg-secondary">{{ simple_assessments }}</span></p>
+                    <p class="mb-1">Premium: <span class="badge bg-primary">{{ premium_assessments }}</span></p>
+                    <p class="mb-0">Completed: <span class="badge bg-success">{{ completed_assessments }}</span></p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-percentage me-2"></i>Completion Rate</h5>
+                    {% if total_assessments > 0 %}
+                        {% set completion_rate = (completed_assessments / total_assessments * 100) %}
+                        <h3>{{ "%.1f"|format(completion_rate) }}%</h3>
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" style="width: {{ completion_rate }}%"></div>
+                        </div>
+                    {% else %}
+                        <h3>0%</h3>
+                        <p class="text-muted">No assessments yet</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-chart-line me-2"></i>Payment Success Rate</h5>
+                    {% if total_payments > 0 %}
+                        {% set payment_rate = (successful_payments / total_payments * 100) %}
+                        <h3>{{ "%.1f"|format(payment_rate) }}%</h3>
+                        <div class="progress">
+                            <div class="progress-bar bg-success" role="progressbar" style="width: {{ payment_rate }}%"></div>
+                        </div>
+                    {% else %}
+                        <h3>0%</h3>
+                        <p class="text-muted">No payments yet</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-bolt me-2"></i>Quick Actions</h5>
+                    <div class="row">
+                        <div class="col-md-2">
+                            <a href="{{ url_for('admin.users') }}" class="btn btn-outline-primary w-100 mb-2">
+                                <i class="fas fa-users d-block"></i>
+                                View Users
+                            </a>
+                        </div>
+                        <div class="col-md-2">
+                            <a href="{{ url_for('admin.payments') }}" class="btn btn-outline-success w-100 mb-2">
+                                <i class="fas fa-credit-card d-block"></i>
+                                View Payments
+                            </a>
+                        </div>
+                        <div class="col-md-2">
+                            <a href="{{ url_for('admin.assessments') }}" class="btn btn-outline-info w-100 mb-2">
+                                <i class="fas fa-clipboard-list d-block"></i>
+                                View Assessments
+                            </a>
+                        </div>
+                        <div class="col-md-2">
+                            <a href="{{ url_for('admin.reports') }}" class="btn btn-outline-warning w-100 mb-2">
+                                <i class="fas fa-file-alt d-block"></i>
+                                View Reports
+                            </a>
+                        </div>
+                        <div class="col-md-2">
+                            <a href="{{ url_for('admin.analytics') }}" class="btn btn-outline-secondary w-100 mb-2">
+                                <i class="fas fa-chart-bar d-block"></i>
+                                Analytics
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="fas fa-user-plus me-2"></i>Recent Users</h6>
+                </div>
+                <div class="card-body">
+                    {% if recent_users %}
+                        {% for user in recent_users %}
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <div>
+                                <strong>{{ user.email }}</strong><br>
+                                <small class="text-muted">{{ user.created_at.strftime('%Y-%m-%d %H:%M') }}</small>
+                            </div>
+                            <a href="{{ url_for('admin.user_detail', user_id=user.id) }}" class="btn btn-sm btn-outline-primary">View</a>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-muted">No users yet</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="fas fa-credit-card me-2"></i>Recent Payments</h6>
+                </div>
+                <div class="card-body">
+                    {% if recent_payments %}
+                        {% for payment in recent_payments %}
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <div>
+                                <strong>${{ "%.2f"|format(payment.amount / 100) }}</strong>
+                                <span class="badge badge-sm bg-{{ 'success' if payment.status == 'succeeded' else 'warning' }}">
+                                    {{ payment.status }}
+                                </span><br>
+                                <small class="text-muted">{{ payment.created_at.strftime('%Y-%m-%d %H:%M') }}</small>
+                            </div>
+                            <a href="{{ url_for('admin.user_detail', user_id=payment.user_id) }}" class="btn btn-sm btn-outline-primary">View User</a>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-muted">No payments yet</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="fas fa-clipboard-list me-2"></i>Recent Assessments</h6>
+                </div>
+                <div class="card-body">
+                    {% if recent_assessments %}
+                        {% for assessment in recent_assessments %}
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <div>
+                                <strong>{{ assessment.type.title() }}</strong>
+                                <span class="badge badge-sm bg-{{ 'success' if assessment.completed else 'warning' }}">
+                                    {{ 'Completed' if assessment.completed else 'In Progress' }}
+                                </span><br>
+                                <small class="text-muted">{{ assessment.created_at.strftime('%Y-%m-%d %H:%M') }}</small>
+                            </div>
+                            <a href="{{ url_for('admin.assessment_detail', assessment_id=assessment.id) }}" class="btn btn-sm btn-outline-primary">View</a>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-muted">No assessments yet</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

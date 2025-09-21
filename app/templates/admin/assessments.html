@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1><i class="fas fa-clipboard-list me-2"></i>Assessments Management</h1>
+                <a href="{{ url_for('admin.index') }}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+                </a>
+            </div>
+
+            <!-- Filters -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <form method="GET" class="row g-3">
+                        <div class="col-md-3">
+                            <label for="type" class="form-label">Filter by Type</label>
+                            <select class="form-select" id="type" name="type">
+                                <option value="">All Types</option>
+                                <option value="simple" {{ 'selected' if current_type == 'simple' else '' }}>Simple</option>
+                                <option value="premium" {{ 'selected' if current_type == 'premium' else '' }}>Premium</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="status" class="form-label">Filter by Status</label>
+                            <select class="form-select" id="status" name="status">
+                                <option value="">All Statuses</option>
+                                <option value="completed" {{ 'selected' if current_status == 'completed' else '' }}>Completed</option>
+                                <option value="in_progress" {{ 'selected' if current_status == 'in_progress' else '' }}>In Progress</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 d-flex align-items-end">
+                            <button type="submit" class="btn btn-primary me-2">
+                                <i class="fas fa-filter me-1"></i>Filter
+                            </button>
+                            <a href="{{ url_for('admin.assessments') }}" class="btn btn-outline-secondary">
+                                <i class="fas fa-times me-1"></i>Clear
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">All Assessments ({{ assessments.total }} total)</h5>
+                </div>
+                <div class="card-body">
+                    {% if assessments.items %}
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>User</th>
+                                    <th>Type</th>
+                                    <th>Status</th>
+                                    <th>Created</th>
+                                    <th>Completed</th>
+                                    <th>Payment</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for assessment in assessments.items %}
+                                <tr>
+                                    <td>{{ assessment.id }}</td>
+                                    <td>{{ assessment.user.email }}</td>
+                                    <td>
+                                        <span class="badge bg-{{ 'primary' if assessment.type == 'premium' else 'secondary' }}">
+                                            {{ assessment.type.title() }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-{{ 'success' if assessment.completed else 'warning' }}">
+                                            {{ 'Completed' if assessment.completed else 'In Progress' }}
+                                        </span>
+                                    </td>
+                                    <td>{{ assessment.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                                    <td>
+                                        {% if assessment.completed_at %}
+                                            {{ assessment.completed_at.strftime('%Y-%m-%d %H:%M') }}
+                                        {% else %}
+                                            <span class="text-muted">-</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if assessment.payment %}
+                                            <span class="badge bg-success">Paid</span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">Free</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <a href="{{ url_for('admin.assessment_detail', assessment_id=assessment.id) }}" class="btn btn-sm btn-primary">
+                                            <i class="fas fa-eye me-1"></i>View
+                                        </a>
+                                        <a href="{{ url_for('admin.user_detail', user_id=assessment.user_id) }}" class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-user me-1"></i>User
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pagination -->
+                    {% if assessments.pages > 1 %}
+                    <nav aria-label="Assessments pagination">
+                        <ul class="pagination justify-content-center">
+                            {% if assessments.has_prev %}
+                                <li class="page-item">
+                                    <a class="page-link" href="{{ url_for('admin.assessments', page=assessments.prev_num, type=current_type, status=current_status) }}">Previous</a>
+                                </li>
+                            {% endif %}
+
+                            {% for page_num in assessments.iter_pages() %}
+                                {% if page_num %}
+                                    {% if page_num != assessments.page %}
+                                        <li class="page-item">
+                                            <a class="page-link" href="{{ url_for('admin.assessments', page=page_num, type=current_type, status=current_status) }}">{{ page_num }}</a>
+                                        </li>
+                                    {% else %}
+                                        <li class="page-item active">
+                                            <span class="page-link">{{ page_num }}</span>
+                                        </li>
+                                    {% endif %}
+                                {% else %}
+                                    <li class="page-item disabled">
+                                        <span class="page-link">...</span>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+
+                            {% if assessments.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="{{ url_for('admin.assessments', page=assessments.next_num, type=current_type, status=current_status) }}">Next</a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                    {% endif %}
+                    {% else %}
+                    <p class="text-center text-muted">No assessments found.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

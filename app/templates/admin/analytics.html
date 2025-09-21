@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1><i class="fas fa-chart-bar me-2"></i>Analytics & Insights</h1>
+                <a href="{{ url_for('admin.index') }}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+                </a>
+            </div>
+
+            <!-- User Registration Trends -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-user-plus me-2"></i>User Registration Trends (Last 30 Days)</h5>
+                </div>
+                <div class="card-body">
+                    {% if daily_users %}
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>New Users</th>
+                                    <th>Visual</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for day in daily_users %}
+                                <tr>
+                                    <td>{{ day.date }}</td>
+                                    <td>{{ day.count }}</td>
+                                    <td>
+                                        <div class="progress" style="width: 100px;">
+                                            <div class="progress-bar bg-primary" role="progressbar"
+                                                 style="width: {{ (day.count / ([day.count for day in daily_users] | max)) * 100 }}%">
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <p class="text-muted">No user registration data available for the last 30 days.</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Assessment Completion Trends -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-check-circle me-2"></i>Assessment Completion Trends (Last 30 Days)</h5>
+                </div>
+                <div class="card-body">
+                    {% if daily_assessments %}
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Completed Assessments</th>
+                                    <th>Visual</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for day in daily_assessments %}
+                                <tr>
+                                    <td>{{ day.date }}</td>
+                                    <td>{{ day.count }}</td>
+                                    <td>
+                                        <div class="progress" style="width: 100px;">
+                                            <div class="progress-bar bg-success" role="progressbar"
+                                                 style="width: {{ (day.count / ([day.count for day in daily_assessments] | max)) * 100 }}%">
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <p class="text-muted">No assessment completion data available for the last 30 days.</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Payment and Revenue Trends -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-dollar-sign me-2"></i>Payment & Revenue Trends (Last 30 Days)</h5>
+                </div>
+                <div class="card-body">
+                    {% if daily_payments %}
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Successful Payments</th>
+                                    <th>Revenue</th>
+                                    <th>Payment Visual</th>
+                                    <th>Revenue Visual</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for day in daily_payments %}
+                                <tr>
+                                    <td>{{ day.date }}</td>
+                                    <td>{{ day.count }}</td>
+                                    <td>${{ "%.2f"|format(day.revenue / 100) }}</td>
+                                    <td>
+                                        <div class="progress" style="width: 80px;">
+                                            <div class="progress-bar bg-info" role="progressbar"
+                                                 style="width: {{ (day.count / ([day.count for day in daily_payments] | max)) * 100 }}%">
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="progress" style="width: 80px;">
+                                            <div class="progress-bar bg-warning" role="progressbar"
+                                                 style="width: {{ (day.revenue / ([day.revenue for day in daily_payments] | max)) * 100 }}%">
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Summary Stats -->
+                    <div class="row mt-3">
+                        <div class="col-md-4">
+                            <div class="text-center">
+                                <h4>${{ "%.2f"|format(daily_payments | sum(attribute='revenue') / 100) }}</h4>
+                                <p class="text-muted">Total Revenue (30 days)</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="text-center">
+                                <h4>{{ daily_payments | sum(attribute='count') }}</h4>
+                                <p class="text-muted">Total Payments (30 days)</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="text-center">
+                                <h4>${{ "%.2f"|format((daily_payments | sum(attribute='revenue') / 100) / (daily_payments | length) if daily_payments else 0) }}</h4>
+                                <p class="text-muted">Average Daily Revenue</p>
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                    <p class="text-muted">No payment data available for the last 30 days.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -145,7 +145,7 @@ def payment_success():
         logger.debug(f"Retrieving PaymentIntent {payment_intent_id} from Stripe for user {current_user.id}")
         intent = stripe.PaymentIntent.retrieve(payment_intent_id)
         logger.info(f"Retrieved PaymentIntent {payment_intent_id} with status: {intent.status}")
-        logger.debug(f"PaymentIntent details - Amount: {intent.amount}, Currency: {intent.currency}, Charges: {len(intent.charges.data) if intent.charges else 0}")
+        logger.debug(f"PaymentIntent details - Amount: {intent.amount}, Currency: {intent.currency}")
 
         if intent.status == 'succeeded':
             logger.info(f"Payment succeeded for user {current_user.id}, updating payment {payment.id}")

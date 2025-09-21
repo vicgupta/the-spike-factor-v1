@@ -81,6 +81,13 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('dashboard.reports') }}">My Reports</a>
                     </li>
+                    {% if current_user.email == 'vicgupta@gmail.com' %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('admin.index') }}">
+                            <i class="fas fa-cog me-1"></i>Admin
+                        </a>
+                    </li>
+                    {% endif %}
                     {% endif %}
                 </ul>
 
