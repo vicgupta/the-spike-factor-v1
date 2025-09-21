@@ -35,7 +35,7 @@
                                     <td>
                                         <div class="progress" style="width: 100px;">
                                             <div class="progress-bar bg-primary" role="progressbar"
-                                                 style="width: {{ (day.count / ([day.count for day in daily_users] | max)) * 100 }}%">
+                                                 style="width: {{ (day.count / (daily_users | map(attribute='count') | max)) * 100 }}%">
                                             </div>
                                         </div>
                                     </td>
@@ -74,7 +74,7 @@
                                     <td>
                                         <div class="progress" style="width: 100px;">
                                             <div class="progress-bar bg-success" role="progressbar"
-                                                 style="width: {{ (day.count / ([day.count for day in daily_assessments] | max)) * 100 }}%">
+                                                 style="width: {{ (day.count / (daily_assessments | map(attribute='count') | max)) * 100 }}%">
                                             </div>
                                         </div>
                                     </td>
@@ -116,14 +116,14 @@
                                     <td>
                                         <div class="progress" style="width: 80px;">
                                             <div class="progress-bar bg-info" role="progressbar"
-                                                 style="width: {{ (day.count / ([day.count for day in daily_payments] | max)) * 100 }}%">
+                                                 style="width: {{ (day.count / (daily_payments | map(attribute='count') | max)) * 100 }}%">
                                             </div>
                                         </div>
                                     </td>
                                     <td>
                                         <div class="progress" style="width: 80px;">
                                             <div class="progress-bar bg-warning" role="progressbar"
-                                                 style="width: {{ (day.revenue / ([day.revenue for day in daily_payments] | max)) * 100 }}%">
+                                                 style="width: {{ (day.revenue / (daily_payments | map(attribute='revenue') | max)) * 100 }}%">
                                             </div>
                                         </div>
                                     </td>

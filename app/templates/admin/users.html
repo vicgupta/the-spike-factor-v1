@@ -26,6 +26,7 @@
                                     <th>Verified</th>
                                     <th>Registered</th>
                                     <th>Assessments</th>
+                                    <th>Reports</th>
                                     <th>Payments</th>
                                     <th>Actions</th>
                                 </tr>
@@ -45,7 +46,10 @@
                                         <span class="badge bg-info">{{ user.assessments.count() }}</span>
                                     </td>
                                     <td>
-                                        <span class="badge bg-success">{{ user.payments.count() }}</span>
+                                        <span class="badge bg-primary">{{ user.reports.count() }}</span>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-success">{{ user.payments|length }}</span>
                                     </td>
                                     <td>
                                         <a href="{{ url_for('admin.user_detail', user_id=user.id) }}" class="btn btn-sm btn-primary">

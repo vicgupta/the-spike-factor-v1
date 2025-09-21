@@ -17,6 +17,12 @@ class User(UserMixin, db.Model):
     # Relationships
     assessments = db.relationship('Assessment', backref='user', lazy='dynamic')
 
+    @property
+    def reports(self):
+        """Get all reports for this user through their assessments"""
+        from sqlalchemy.orm import joinedload
+        return db.session.query(Report).join(Assessment).filter(Assessment.user_id == self.id)
+
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
 
